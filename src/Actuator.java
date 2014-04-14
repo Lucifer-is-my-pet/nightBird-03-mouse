@@ -11,8 +11,8 @@ public class Actuator {
 	public static void main(String[] args) throws IOException, URISyntaxException {
 		String name = "Norushka";
 		CodeSource codeSource = Actuator.class.getProtectionDomain().getCodeSource();
-
 		File file = new File(new File(codeSource.getLocation().toURI().getPath()).getParentFile().getPath(), "src/input.txt");
+		
 		try {
 			FileInputStream stream = new FileInputStream(file);
 			try {
@@ -25,15 +25,14 @@ public class Actuator {
 				Direction newDirection = Direction.None;
 				Action newAction = Action.Ok;
 
-				while (wood.getWoodman(name).GetLifeCount() >= 0 && !(newAction == Action.Finish)) {
+				while (!(newAction == Action.WoodmanNotFound) && !(newAction == Action.Finish)) {
 					newAction = wood.move(name, latestDirection); // берём последнее направление, выбранное мышью, передаём вудману, получаем статус
 					newDirection = norushka.NextMove(newAction); // статус отдаём мыши, получаем новое направление					
 					latestDirection = newDirection; // делаем новое направление старым и идём на новый круг
-					if (wood.getWoodman(name).GetLifeCount() < 2)
-						norushka.nameOfAlghoritm = "Back to life";				
+								
 				}
 				
-				if (wood.getWoodman(name).GetLifeCount() < 0)
+				if (newAction == Action.WoodmanNotFound)
 					System.out.println("Мышь умерла");
 				if (newAction == Action.Finish)
 					System.out.println("Финиш!");

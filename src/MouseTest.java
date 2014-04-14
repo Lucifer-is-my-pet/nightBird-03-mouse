@@ -79,20 +79,19 @@ public class MouseTest {
 		@Test
 		public void testNextMoveFromLife() { // проверяем, чем заполнился стек 
 			mouse.NextMove(Action.Ok);
-			mouse.NextMove(Action.Life);
-			mouse.NextMove(Action.Life);
-			mouse.NextMove(Action.Life);
-			mouse.NextMove(Action.Life);
-			mouse.NextMove(Action.Life); // Right
+			assertEquals(Direction.None, mouse.NextMove(Action.Life));
+			assertEquals(Direction.None, mouse.NextMove(Action.Life));
+			assertEquals(Direction.None, mouse.NextMove(Action.Life));
+			assertEquals(Direction.Right, mouse.NextMove(Action.Life)); // Right
 			
-			mouse.NextMove(Action.Ok); // Down
-			mouse.NextMove(Action.Fail); // Right
-			mouse.NextMove(Action.Ok);	// Down	
-			mouse.NextMove(Action.Ok); // Left
-			mouse.NextMove(Action.Fail); // Down
-			mouse.NextMove(Action.Fail); // Right
-			mouse.NextMove(Action.Fail); // Up
-			mouse.NextMove(Action.Ok); // Right
+			assertEquals(Direction.Down, mouse.NextMove(Action.Ok)); // Down
+			assertEquals(Direction.Right, mouse.NextMove(Action.Fail)); // Right
+			assertEquals(Direction.Down, mouse.NextMove(Action.Ok));	// Down	
+			assertEquals(Direction.Left, mouse.NextMove(Action.Ok)); // Left
+			assertEquals(Direction.Down, mouse.NextMove(Action.Fail)); // Down
+			assertEquals(Direction.Right, mouse.NextMove(Action.Fail)); // Right
+			assertEquals(Direction.Up, mouse.NextMove(Action.Fail)); // Up
+			assertEquals(Direction.Right, mouse.NextMove(Action.Ok)); // Right
 			Iterator<Direction> stackIterator = mouse.wayFromLife.iterator();
 			while (stackIterator.hasNext()) {
 				Direction dir = stackIterator.next();
@@ -103,18 +102,17 @@ public class MouseTest {
 	@Test
 	public void testWayToLifeAndReturning() { 
 		mouse.NextMove(Action.Ok);
-		mouse.NextMove(Action.Life);
-		mouse.NextMove(Action.Life);
-		mouse.NextMove(Action.Life);
-		mouse.NextMove(Action.Life);
-		mouse.NextMove(Action.Life); // Right
+		assertEquals(Direction.None, mouse.NextMove(Action.Life));
+		assertEquals(Direction.None, mouse.NextMove(Action.Life));
+		assertEquals(Direction.None, mouse.NextMove(Action.Life));
+		assertEquals(Direction.Right, mouse.NextMove(Action.Life));
 
-		mouse.NextMove(Action.Ok); // Down
-		mouse.NextMove(Action.Fail); // Right
-		mouse.NextMove(Action.Ok);
-		mouse.NextMove(Action.Fail);
-		mouse.NextMove(Action.Ok);
-		mouse.NextMove(Action.Fail); 
+		assertEquals(Direction.Down, mouse.NextMove(Action.Ok));
+		assertEquals(Direction.Right, mouse.NextMove(Action.Fail));
+		assertEquals(Direction.Down, mouse.NextMove(Action.Ok));
+		assertEquals(Direction.Right, mouse.NextMove(Action.Fail));
+		assertEquals(Direction.Down, mouse.NextMove(Action.Ok));
+		assertEquals(Direction.Right, mouse.NextMove(Action.Fail));
 		
 		mouse.nameOfAlghoritm = "Back to life";
 		assertEquals(Direction.Left, mouse.NextMove(Action.Ok));

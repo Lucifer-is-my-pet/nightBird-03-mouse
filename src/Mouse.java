@@ -26,7 +26,15 @@ public class Mouse implements IMouse {
 	private boolean life; // будем ориентироваться на неё при сохранении пути назад
 	private boolean empty;
 	String nameOfAlghoritm;
+	private boolean itKilledMe;
+	private int lifeCount;
 
+	public int getLifeCount() {
+		return lifeCount;
+	}
+	public void setLifeCount(int shift) {
+		this.lifeCount+=shift;
+	}
 	// блок геттеров-сеттеров для тестов
 	public Direction getDirection() {
 		return this.latestDirection;
@@ -79,6 +87,7 @@ public class Mouse implements IMouse {
 		
 		switch (action) { 
 		case Ok :
+			itKilledMe = false;
 			if (empty) { // если путь пуст, надо понять, где мы стоим 
 				empty = false;
 				return latestDirection; 
@@ -90,11 +99,16 @@ public class Mouse implements IMouse {
 			}
 			return ifItWasOk(latestDirection);
 
-		case Fail : 
+		case Fail :
+			if (itKilledMe)
+				setLifeCount(-1);
 			//System.out.println("уперлись в стену с " + latestDirection + ", возвращаем " + ifThereIsWallTheoretically(latestDirection));
+			if (getLifeCount() < 2)
+				nameOfAlghoritm = "Back to life";
 			return ifThereIsWall(latestDirection);
 
 		case Life :
+			itKilledMe = false;
 			if (!life)
 				life = true;
 
@@ -103,6 +117,7 @@ public class Mouse implements IMouse {
 
 			if (getEnegry != 0) {
 				getEnegry--;
+				setLifeCount(1);
 				return Direction.None;
 			}
 			else { 
@@ -111,10 +126,13 @@ public class Mouse implements IMouse {
 			}
 			
 		case Dead : // не учитывается случай, когда теряется жизнь при столкновении со стеной, т.е. мышь ничего не подозревает
+			itKilledMe = true;
 			if (!deleteDeadEnds(latestDirection)) {
 				wayFromLife.push(latestDirection);
 				//System.out.println("положили после капкана " + latestDirection);
 			}
+			if (getLifeCount() < 2)
+				nameOfAlghoritm = "Back to life";
 			return ifItWasOk(latestDirection);
 
 		default : break;
